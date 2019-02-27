@@ -3,7 +3,7 @@
 // Filename: main.rs
 // Author: Louise <ludwigette>
 // Created: Wed Feb 27 21:16:05 2019 (+0100)
-// Last-Updated: Wed Feb 27 22:57:41 2019 (+0100)
+// Last-Updated: Thu Feb 28 00:31:30 2019 (+0100)
 //           By: Louise <ludwigette>
 //
 #[macro_use]
@@ -34,8 +34,7 @@ fn main() {
                     Ok(mut p) => {
                         let rule = p.next().unwrap();
                         
-                        env.eval(rule);
-                        println!("{:?}", env);
+                        env.eval_program(rule);
                     },
                     Err(e) => println!("{}", e),
                 }

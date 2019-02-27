@@ -3,7 +3,7 @@
 // Filename: env.rs
 // Author: Louise <ludwigette>
 // Created: Wed Feb 27 22:43:37 2019 (+0100)
-// Last-Updated: Thu Feb 28 00:19:26 2019 (+0100)
+// Last-Updated: Thu Feb 28 00:32:48 2019 (+0100)
 //           By: Louise <ludwigette>
 //
 use std::rc::Rc;
@@ -102,9 +102,6 @@ impl Environment {
                 let var = self.get_var(var_s.as_str());
 
                 var.set(expr_val);
-                
-                println!("{:?}", expr_val);
-                println!("{:?}", var);
             },
             Rule::conditional_stmt => {
                 let mut iter = stmt.into_inner();
@@ -115,14 +112,20 @@ impl Environment {
                     self.eval_stmt(cond_stmt);
                 }
             },
+            Rule::display_stmt => {
+                let mut iter = stmt.into_inner();
+                let value = self.eval_expr(iter.next().unwrap());
+
+                println!("{}", value);
+            }
             _ => {
                 eprintln!("unknown stmt: {:?}", stmt);
             }
         }
     }
-    
-    pub fn eval(&mut self, input: Pair<Rule>) {
-        for pair in input.into_inner() {
+
+    pub fn eval_stmts(&mut self, stmts: Pair<Rule>) {
+        for pair in stmts.into_inner() {
             match pair.as_rule() {
                 Rule::stmt => {
                     let stmt = pair.into_inner().next().unwrap();
@@ -132,5 +135,10 @@ impl Environment {
                 _ => (),
             }
         }
+    }
+    
+    pub fn eval_program(&mut self, input: Pair<Rule>) {
+        let stmts = input.into_inner().next().unwrap();
+        self.eval_stmts(stmts);
     }
 }

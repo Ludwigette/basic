@@ -15,6 +15,8 @@ expression = { arith_expression ~ (operator_comp ~ arith_expression)* }
 
 assign_stmt = { expression ~ "→" ~ variable }
 conditional_stmt = { expression ~ "⇒" ~ stmt }
-stmt = { assign_stmt | conditional_stmt }
+display_stmt = { "Disp " ~ expression }
+stmt = { assign_stmt | conditional_stmt | display_stmt }
+stmts = { stmt? ~ (SEPARATOR ~ stmt)* }
 
-program = { SOI ~ stmt? ~ (SEPARATOR ~ stmt)* ~ EOI }
+program = { SOI ~ stmts ~ EOI }
