@@ -3,7 +3,7 @@
 // Filename: env.rs
 // Author: Louise <ludwigette>
 // Created: Wed Feb 27 22:43:37 2019 (+0100)
-// Last-Updated: Thu Feb 28 00:11:31 2019 (+0100)
+// Last-Updated: Thu Feb 28 00:19:26 2019 (+0100)
 //           By: Louise <ludwigette>
 //
 use std::rc::Rc;
@@ -107,9 +107,17 @@ impl Environment {
                 println!("{:?}", var);
             },
             Rule::conditional_stmt => {
-                unimplemented!()
+                let mut iter = stmt.into_inner();
+                let condition = self.eval_expr(iter.next().unwrap());
+                let cond_stmt = iter.next().unwrap().into_inner().next().unwrap();
+
+                if condition != 0.0 {
+                    self.eval_stmt(cond_stmt);
+                }
             },
-            _ => {}
+            _ => {
+                eprintln!("unknown stmt: {:?}", stmt);
+            }
         }
     }
     
