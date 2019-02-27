@@ -1,0 +1,20 @@
+SEPARATOR = _{ "\n" | ";" }
+int = @{ '0'..'9'+ }
+number = @{ int ~ ("." ~ int)? }
+
+variable = @{ 'A'..'Z' }
+
+operator_factor = { "×" | "÷" }
+operator_term = { "+" | "-" }
+operator_comp = { "=" | "≠" | "<" | ">" }
+
+factor = { number | variable | ("(" ~ expression ~ ")") }
+term = { factor ~ (operator_factor ~ factor)* }
+arith_expression = { term ~ (operator_term ~ term)* }
+expression = { arith_expression ~ (operator_comp ~ arith_expression)* }
+
+assign_stmt = { expression ~ "→" ~ variable }
+conditional_stmt = { expression ~ "⇒" ~ stmt }
+stmt = { assign_stmt | conditional_stmt }
+
+program = { SOI ~ stmt? ~ (SEPARATOR ~ stmt)* ~ EOI }
