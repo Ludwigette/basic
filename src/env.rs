@@ -3,7 +3,7 @@
 // Filename: env.rs
 // Author: Louise <ludwigette>
 // Created: Wed Feb 27 22:43:37 2019 (+0100)
-// Last-Updated: Thu Feb 28 00:32:48 2019 (+0100)
+// Last-Updated: Thu Feb 28 00:59:04 2019 (+0100)
 //           By: Louise <ludwigette>
 //
 use std::rc::Rc;
@@ -21,13 +21,13 @@ impl Environment {
         Default::default()
     }
 
-    pub fn get_var(&mut self, v: &str) -> Rc<Cell<f64>> {
+    pub fn get_var(&self, v: &str) -> Rc<Cell<f64>> {
         let u = (v.chars().next().unwrap() as usize) - b'A' as usize;
 
         self.variables[u].clone()
     }
 
-    pub fn eval_factor(&mut self, expr: Pair<Rule>) -> f64 {
+    pub fn eval_factor(&self, expr: Pair<Rule>) -> f64 {
         let factor = expr.into_inner().next().unwrap();
         
         match factor.as_rule() {
@@ -38,7 +38,7 @@ impl Environment {
         }
     }
     
-    pub fn eval_term(&mut self, expr: Pair<Rule>) -> f64 {
+    pub fn eval_term(&self, expr: Pair<Rule>) -> f64 {
         let mut iter = expr.into_inner();
         let mut value = self.eval_factor(iter.next().unwrap());
 
@@ -55,7 +55,7 @@ impl Environment {
         value
     }
     
-    pub fn eval_arith_expr(&mut self, expr: Pair<Rule>) -> f64 {
+    pub fn eval_arith_expr(&self, expr: Pair<Rule>) -> f64 {
         let mut iter = expr.into_inner();
         let mut value = self.eval_term(iter.next().unwrap());
 
@@ -72,7 +72,7 @@ impl Environment {
         value
     }
     
-    pub fn eval_expr(&mut self, expr: Pair<Rule>) -> f64 {
+    pub fn eval_expr(&self, expr: Pair<Rule>) -> f64 {
         let mut iter = expr.into_inner();
         let mut value = self.eval_arith_expr(iter.next().unwrap());
 
@@ -84,6 +84,8 @@ impl Environment {
                 "≠" => value = if value != new { 1.0 } else { 0.0 },
                 "<" => value = if value <  new { 1.0 } else { 0.0 },
                 ">" => value = if value >  new { 1.0 } else { 0.0 },
+                "≤" => value = if value <= new { 1.0 } else { 0.0 },
+                "≥" => value = if value >= new { 1.0 } else { 0.0 },
                 _ => unreachable!(),
             }
         }

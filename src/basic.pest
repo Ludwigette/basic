@@ -6,7 +6,7 @@ variable = @{ 'A'..'Z' }
 
 operator_factor = { "×" | "÷" }
 operator_term = { "+" | "-" }
-operator_comp = { "=" | "≠" | "<" | ">" }
+operator_comp = { "=" | "≠" | "<" | ">" | "≤" | "≥" }
 
 factor = { number | variable | ("(" ~ expression ~ ")") }
 term = { factor ~ (operator_factor ~ factor)* }
