@@ -1,22 +1,29 @@
-SEPARATOR = _{ "\n" | ";" }
+WHITESPACE = _{ " " }
+SEPARATOR = _{ "\n" | ":" }
+
 int = @{ '0'..'9'+ }
 number = @{ int ~ ("." ~ int)? }
-
 variable = @{ 'A'..'Z' }
+string_literal = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+
+question = { string_literal? ~ "?" }
 
 operator_factor = { "×" | "÷" }
 operator_term = { "+" | "-" }
 operator_comp = { "=" | "≠" | "<" | ">" | "≤" | "≥" }
 
-factor = { number | variable | ("(" ~ expression ~ ")") }
+factor = { number | variable | question | ("(" ~ expression ~ ")") }
 term = { factor ~ (operator_factor ~ factor)* }
 arith_expression = { term ~ (operator_term ~ term)* }
 expression = { arith_expression ~ (operator_comp ~ arith_expression)* }
 
+while_block = { "While" ~ expression ~ SEPARATOR ~ stmts ~ SEPARATOR ~ "WhileEnd" }
+conditional_block = { "If" ~ expression ~ SEPARATOR ~ "Then" ~ stmts ~ SEPARATOR ~ ("Else" ~ stmts ~ SEPARATOR)? ~ "IfEnd" }
+
 assign_stmt = { expression ~ "→" ~ variable }
 conditional_stmt = { expression ~ "⇒" ~ stmt }
-display_stmt = { "Disp " ~ expression }
-stmt = { assign_stmt | conditional_stmt | display_stmt }
+display_stmt = { "Disp" ~ (expression | string_literal) }
+stmt = { assign_stmt | while_block | conditional_block | conditional_stmt | display_stmt }
 stmts = { stmt? ~ (SEPARATOR ~ stmt)* }
 
 program = { SOI ~ stmts ~ EOI }

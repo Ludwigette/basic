@@ -3,7 +3,7 @@
 // Filename: main.rs
 // Author: Louise <ludwigette>
 // Created: Wed Feb 27 21:16:05 2019 (+0100)
-// Last-Updated: Thu Feb 28 00:59:44 2019 (+0100)
+// Last-Updated: Sat Mar  2 14:19:09 2019 (+0100)
 //           By: Louise <ludwigette>
 //
 #[macro_use]
@@ -17,6 +17,7 @@ use rustyline::Editor;
 mod parser;
 use parser::{BasicParser, Rule};
 
+mod error;
 mod env;
 
 fn main() {
